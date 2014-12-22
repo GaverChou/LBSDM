@@ -1,13 +1,16 @@
 package com.gaver.core;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
+import com.gaver.dataprec.PointFilter;
+import com.gaver.domain.RefPoint;
+import com.gaver.domain.RoadRefPointList;
 import com.gaver.domain.User;
-import com.gaver.domain.UserPoint;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
@@ -17,7 +20,8 @@ public class TxtIO {
 //	public static ArrayList<User> users = new ArrayList<User>();
 	public static String Test(String filepath){
 		StringBuffer buffer = new StringBuffer(5*1024*1024);
-		BufferedReader bReader = null;
+		BufferedReader bReader = null;	
+		BufferedWriter bWriter = null;
 		try {
 			// 实例化Mongo对象，连接27017端口
 			Mongo mongo = new Mongo("localhost", 27017);
@@ -27,16 +31,31 @@ public class TxtIO {
 			// 从Mongodb中获得名为yourColleection的数据集合，如果该数据集合不存在，Mongodb会为其新建立
 			DBCollection collection = db.getCollection("Points");
 			bReader = new BufferedReader(new FileReader(filepath));
+			bWriter = new BufferedWriter(new FileWriter("roaddata.txt"));
 			String temp;
 			int count=0;
 			User user = null;
+//			RoadRefPointList rlist = null;
 			while ((temp=bReader.readLine())!=null) {
+//				rlist = RoadRefPointList.parseRefPointListByTxt(temp);
 				user = User.parseUserByTxt(temp);
-//				users.add(user);
-				for (BasicDBObject point:user.getUserPoints()) {
-					collection.insert(point);
-				}
-				count+=user.getUserPoints().size();
+				PointFilter filter = new PointFilter(user);
+				filter.setMinDistance(10);
+				filter.run();
+				break;
+//				Thread thread = new Thread(filter);
+//				thread.start();
+//				if (count>0) {
+//					break;
+//				}
+//				System.out.println("------------------------------------------");
+////				users.add(user);
+////				for (RefPoint point:rlist.getPoints()) {
+//////					collection.insert(point);
+////					bWriter.write(point.getPoint().toString()+"\n");
+////					bWriter.flush();
+////				}
+//				count+=user.getUserPoints().size();
 			}
 			System.out.println(count);
 		} catch (FileNotFoundException e) {
@@ -48,6 +67,14 @@ public class TxtIO {
 				try {
 					bReader.close();
 				} catch (IOException e){}
+			}
+			if(bWriter!=null){
+				try {
+					bWriter.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		return buffer.toString();

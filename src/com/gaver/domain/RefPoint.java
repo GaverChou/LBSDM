@@ -46,4 +46,12 @@ public class RefPoint {
 		road_num = roadNum;
 	}
 
+	public Point getPoint() {
+		return point;
+	}
+
+	public void setPoint(Point point) {
+		this.point = point;
+	}
+
 }

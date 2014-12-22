@@ -1,4 +1,4 @@
-package com.dbscan;
+package com.gaver.dbscan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 
 
 public class Cluster {
+	
     private List<DataPoint> dataPoints = new ArrayList<DataPoint>(); // 类簇中的样本点
     private String clusterName; //簇名
 

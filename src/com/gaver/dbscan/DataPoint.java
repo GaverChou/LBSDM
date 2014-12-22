@@ -1,4 +1,4 @@
-package com.dbscan;
+package com.gaver.dbscan;
 
 public class DataPoint {
 	private String dataPointName; // 样本点名

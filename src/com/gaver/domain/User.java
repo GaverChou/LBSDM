@@ -15,9 +15,11 @@ public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String cUid;
 	private ArrayList<BasicDBObject> userPoints;
+	private ArrayList<UserPoint> uPoints;
 	
 	public User(){
 		userPoints = new ArrayList<BasicDBObject>();
+		uPoints = new ArrayList<UserPoint>();
 	}
 	
 	public static User parseUserByTxt(String data) {
@@ -30,6 +32,7 @@ public class User implements Serializable{
 		String[] points = sp[1].split("\\|");
 		for (int i = 0; i < points.length; i++) {
 			UserPoint point = UserPoint.parseUserPointByTxt(points[i]);
+			user.uPoints.add(point);
 			user.userPoints.add(point.retDBObject());
 		}
 		return user;
@@ -55,6 +58,14 @@ public class User implements Serializable{
 
 	public void setUserPoints(ArrayList<BasicDBObject> userPoints) {
 		this.userPoints = userPoints;
+	}
+
+	public ArrayList<UserPoint> getuPoints() {
+		return uPoints;
+	}
+
+	public void setuPoints(ArrayList<UserPoint> uPoints) {
+		this.uPoints = uPoints;
 	}
 	
 }

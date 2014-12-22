@@ -1,7 +1,19 @@
-package com.dbscan;
+package com.gaver.dbscan;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.gaver.domain.User;
+import com.gaver.domain.UserPoint;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
 
 public class ClusterAnalysis {
 
@@ -179,10 +191,59 @@ public class ClusterAnalysis {
        dpoints.add(new DataPoint(p,"p",false));
        dpoints.add(new DataPoint(q,"q",false));
 
-       ClusterAnalysis ca=new ClusterAnalysis();
-       List<Cluster> clusterList=ca.doDbscanAnalysis(dpoints, 2, 4);
-       ca.displayCluster(clusterList);
-
+//       ClusterAnalysis ca=new ClusterAnalysis();
+//       List<Cluster> clusterList=ca.doDbscanAnalysis(dpoints, 2, 4);
+//       ca.displayCluster(clusterList);
+       ArrayList<DataPoint> dpoints2 =
+       Test("C:\\Users\\Administrator\\Desktop\\LBS_DATASET\\LBS_DATASET\\traj_hefei.txt");
+     ClusterAnalysis ca=new ClusterAnalysis();
+     List<Cluster> clusterList=ca.doDbscanAnalysis(dpoints2, 0.001, 4);
+     ca.displayCluster(clusterList);
    }
+   
+   public static ArrayList<DataPoint> Test(String filepath){
+		StringBuffer buffer = new StringBuffer(5*1024*1024);
+		BufferedReader bReader = null;	
+	       ArrayList<DataPoint> dpoints = new ArrayList<DataPoint>();
+//		BufferedWriter bWriter = null;
+		try {
+			
+			bReader = new BufferedReader(new FileReader(filepath));
+//			bWriter = new BufferedWriter(new FileWriter("data.txt"));
+			String temp;
+			int count=0;
+			User user = null;
+			DataPoint point2 = null;
+			double x,y;
+			while ((temp=bReader.readLine())!=null) {
+				user = User.parseUserByTxt(temp);
+//				users.add(user);
+				for (UserPoint point:user.getuPoints()) {
+					x = point.getPoint().getX();
+					y=point.getPoint().getY(); 
+					double[] p = {x,y};
+  					point2 = new DataPoint(p,count+"",false);
+  					dpoints.add(point2);
+  					System.out.println(count);
+  					if (count>50) {
+  						return dpoints;
+					}
+				}
+				count+=user.getUserPoints().size();
+			}
+			System.out.println(count);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			if (bReader!=null) {
+				try {
+					bReader.close();
+				} catch (IOException e){}
+			}
+		}
+		return dpoints;
+	}
 }
 
