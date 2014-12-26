@@ -23,7 +23,7 @@ public class User implements Serializable{
 	}
 	
 	public static User parseUserByTxt(String data) {
-		if (!TextUtil.textValid(data)) {
+		if (!TextUtil.isValid(data)) {
 			return null;
 		}
 		User user = new User();

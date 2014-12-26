@@ -7,9 +7,18 @@ public class Point {
 
 	private double x;
 	private double y;
+	private boolean hasCatch;
 
 	public Point() {
 		super();
+	}
+
+	public boolean isHasCatch() {
+		return hasCatch;
+	}
+
+	public void setHasCatch(boolean hasCatch) {
+		this.hasCatch = hasCatch;
 	}
 
 	public Point(double x, double y) {
@@ -59,6 +68,6 @@ public class Point {
 
 	@Override
 	public String toString() {
-		return x + "\t" + y;
+		return x + "," + y;
 	}
 }

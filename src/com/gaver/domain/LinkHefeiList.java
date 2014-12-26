@@ -13,7 +13,7 @@ public class LinkHefeiList {
 	}
 
 	public static LinkHefeiList parseLinkHefeisByTxt(String data){
-		if(!TextUtil.textValid(data)){
+		if(!TextUtil.isValid(data)){
 			return null;
 		}
 		LinkHefeiList list = new LinkHefeiList();

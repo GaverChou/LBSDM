@@ -1,19 +1,14 @@
 package com.gaver.dbscan;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.gaver.domain.User;
 import com.gaver.domain.UserPoint;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
 
 public class ClusterAnalysis {
 
@@ -202,14 +197,11 @@ public class ClusterAnalysis {
    }
    
    public static ArrayList<DataPoint> Test(String filepath){
-		StringBuffer buffer = new StringBuffer(5*1024*1024);
 		BufferedReader bReader = null;	
 	       ArrayList<DataPoint> dpoints = new ArrayList<DataPoint>();
-//		BufferedWriter bWriter = null;
 		try {
 			
 			bReader = new BufferedReader(new FileReader(filepath));
-//			bWriter = new BufferedWriter(new FileWriter("data.txt"));
 			String temp;
 			int count=0;
 			User user = null;
@@ -217,7 +209,6 @@ public class ClusterAnalysis {
 			double x,y;
 			while ((temp=bReader.readLine())!=null) {
 				user = User.parseUserByTxt(temp);
-//				users.add(user);
 				for (UserPoint point:user.getuPoints()) {
 					x = point.getPoint().getX();
 					y=point.getPoint().getY(); 
@@ -225,9 +216,9 @@ public class ClusterAnalysis {
   					point2 = new DataPoint(p,count+"",false);
   					dpoints.add(point2);
   					System.out.println(count);
-  					if (count>50) {
-  						return dpoints;
-					}
+				}
+				if (count>10000) {
+					return dpoints;
 				}
 				count+=user.getUserPoints().size();
 			}

@@ -15,7 +15,7 @@ public class UserPoint implements Serializable{
 	private Point point;
 	
 	public static UserPoint parseUserPointByTxt(String data){
-		if (!TextUtil.textValid(data)) {
+		if (!TextUtil.isValid(data)) {
 			return null;
 		}
 		UserPoint up = new UserPoint();
@@ -24,6 +24,9 @@ public class UserPoint implements Serializable{
 		up.point = new Point(Double.parseDouble(userPoint[1]),
 		Double.parseDouble(userPoint[2]));
 		return up;
+	}
+	public double speed(UserPoint p2){
+		return point.realDistanceWithPoint(p2.getPoint())/Math.abs(time-p2.time);
 	}
 	
 	public long getTime() {

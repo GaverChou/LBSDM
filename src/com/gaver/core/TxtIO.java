@@ -6,11 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.gaver.dataprec.PointFilter;
-import com.gaver.domain.RefPoint;
-import com.gaver.domain.RoadRefPointList;
 import com.gaver.domain.User;
+import com.gaver.domain.UserPoint;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
@@ -31,18 +31,19 @@ public class TxtIO {
 			// 从Mongodb中获得名为yourColleection的数据集合，如果该数据集合不存在，Mongodb会为其新建立
 			DBCollection collection = db.getCollection("Points");
 			bReader = new BufferedReader(new FileReader(filepath));
-			bWriter = new BufferedWriter(new FileWriter("roaddata.txt"));
+			bWriter = new BufferedWriter(new FileWriter("filterdata.csv"));
 			String temp;
 			int count=0;
 			User user = null;
+			bWriter.write("X,Y"+"\n");
 //			RoadRefPointList rlist = null;
 			while ((temp=bReader.readLine())!=null) {
 //				rlist = RoadRefPointList.parseRefPointListByTxt(temp);
 				user = User.parseUserByTxt(temp);
 				PointFilter filter = new PointFilter(user);
-				filter.setMinDistance(10);
+				filter.setMinV(1);
+				filter.setMaxV(15);
 				filter.run();
-				break;
 //				Thread thread = new Thread(filter);
 //				thread.start();
 //				if (count>0) {
@@ -50,12 +51,12 @@ public class TxtIO {
 //				}
 //				System.out.println("------------------------------------------");
 ////				users.add(user);
-////				for (RefPoint point:rlist.getPoints()) {
-//////					collection.insert(point);
-////					bWriter.write(point.getPoint().toString()+"\n");
-////					bWriter.flush();
-////				}
-//				count+=user.getUserPoints().size();
+				for (UserPoint point:user.getuPoints()) {
+//					collection.insert(point);
+					bWriter.write(point.getPoint().toString()+"\n");
+					bWriter.flush();
+				}
+				count+=user.getUserPoints().size();
 			}
 			System.out.println(count);
 		} catch (FileNotFoundException e) {
