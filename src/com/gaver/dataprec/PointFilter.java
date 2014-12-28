@@ -39,13 +39,13 @@ public class PointFilter {
 		ArrayList<UserPoint> userPoints = user.getuPoints();
 		ArrayList<UserPoint> newuserPoints = new ArrayList<UserPoint>();
 		newuserPoints.add(userPoints.get(0));
-		System.out.println(userPoints.size());
+//		System.out.println(userPoints.size());
 		for (int i = 0; i < userPoints.size() - 1; i++) {
 			for (int j = i + 1; j < userPoints.size(); j++) {
 				UserPoint p1 = userPoints.get(i);
 				UserPoint p2 = userPoints.get(i + 1);
 				double speed = p1.speed(p2);
-				System.out.println(speed);
+//				System.out.println(speed);
 				if (speed > minV && speed < maxV) {
 					newuserPoints.add(userPoints.get(i + 1));
 					break;
@@ -59,6 +59,6 @@ public class PointFilter {
 
 	public void run() {
 		stopPointFilt();
-		int cout = user.getuPoints().size();
+//		int cout = user.getuPoints().size();
 	}
 }

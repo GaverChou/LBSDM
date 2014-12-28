@@ -111,8 +111,8 @@ public class DJ_Cluster {
 				if (tempCluster.getDataPoints() != null
 						&& tempCluster.getDataPoints().size() > 0) {
 					count += tempCluster.getDataPoints().size();
-					System.out.println("----------"
-							+ tempCluster.getClusterName() + "----------");
+//					System.out.println("----------"
+//							+ tempCluster.getClusterName() + "----------");
 					for (Point dp : tempCluster.getDataPoints()) {
 						System.out.println(dp.toString());
 					}
@@ -126,8 +126,11 @@ public class DJ_Cluster {
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 		ArrayList<Point> dpoints2 = Test("C:\\Users\\Administrator\\Desktop\\LBS_DATASET\\LBS_DATASET\\traj_hefei.txt");
+//		for (Point point : dpoints2) {
+//			System.out.println(point.toString());
+//		}
 		DJ_Cluster ca = new DJ_Cluster();
-		List<Cluster> clusterList = ca.doDJClusterAnalysis(dpoints2, 0, 0);
+		List<Cluster> clusterList = ca.doDJClusterAnalysis(dpoints2, 15, 200);
 		ca.displayCluster(clusterList);
 //		RoadCenterLineAnalysis analysis = new RoadCenterLineAnalysis();
 //		List<Cluster> list = analysis.clusterPoint(dpoints2, 25, 2);
@@ -151,13 +154,17 @@ public class DJ_Cluster {
 			User user = null;
 			while ((temp = bReader.readLine()) != null) {
 				user = User.parseUserByTxt(temp);
+				PointFilter filter = new PointFilter(user);
+				filter.setMinV(0.5);
+				filter.setMaxV(15);
+				filter.run();
 				for (UserPoint point : user.getuPoints()) {
 					dpoints.add(point.getPoint());
 					count++;
 				}
-				if (count>10000) {
-					break;
-				}
+//				if (count>500000) {
+//					break;
+//				}
 			}
 			System.out.println("All point count is : " + count);
 		} catch (FileNotFoundException e) {
