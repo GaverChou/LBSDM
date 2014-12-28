@@ -23,6 +23,10 @@ public class Cluster {
 		return point;
 	}
 
+	public void setPoint(Point point) {
+		this.point = point;
+	}
+
 	public String getClusterName() {
 		return clusterName;
 	}

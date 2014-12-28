@@ -11,37 +11,39 @@ public class RoadCenterLineAnalysis {
 	public List<Cluster> clusterPoint(List<Point> dataPoints,
 			double eps, int minPnt){
 		List<Cluster> clusterList = new ArrayList<Cluster>();
+		Cluster tempCluster = null;
+		int count = 0;
 		for (int i = 0; i < dataPoints.size(); i++) {
 			Point dp = dataPoints.get(i);
 			if (dp.isHasCatch()) {
 				continue;
 			}
-			List<Point> arrivableObjects = getNeighborhood(dp, dataPoints,eps,minPnt);
-			if (arrivableObjects != null) {
-				Cluster tempCluster = new Cluster();
-				tempCluster.setClusterName("Cluster " + i);
-				tempCluster.setDataPoints(arrivableObjects);
-				tempCluster.calculateCoordinate();
+			 tempCluster = calcularNeighborhood(dp, dataPoints,eps,minPnt);
+			if (tempCluster != null) {
+				tempCluster.setClusterName("Cluster " + (count++));
 				clusterList.add(tempCluster);
 			}
 		}
 		return clusterList;
 	}
 	
-	private List<Point> getNeighborhood(Point point, List<Point> dataPoints,
+	private Cluster calcularNeighborhood(Point point, List<Point> dataPoints,
 			double eps, int minPnt) {
-		List<Point> arrivableObjects = new ArrayList<Point>(); // 用来存储所有直接密度可达对象
-
+		Cluster cluster = new Cluster();
+		double x=0,y=0;
+		int size = 0;
 		for (Point dp : dataPoints) {
 			double distance = point.realDistanceWithPoint(dp);
 			if (distance <= eps) {
 				dp.setHasCatch(true);
-				arrivableObjects.add(dp);
+				x+=dp.getX();
+				y+=dp.getY();
+				size++;
 			}
 		}
-
-		if (arrivableObjects.size() >= minPnt) {
-			return arrivableObjects;
+		if (size >= minPnt) {
+			cluster.setPoint(new Point(x/size,y/size));
+			return cluster;
 		}
 		return null;
 	}

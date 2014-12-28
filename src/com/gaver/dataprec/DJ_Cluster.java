@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gaver.core.RoadCenterLineAnalysis;
 import com.gaver.domain.Point;
 import com.gaver.domain.User;
 import com.gaver.domain.UserPoint;
@@ -17,34 +16,26 @@ public class DJ_Cluster {
 	public List<Cluster> doDJClusterAnalysis(List<Point> dataPoints,
 			double radius, int ObjectNum) {
 		List<Cluster> clusterList = new ArrayList<Cluster>();
+		int count = 0;
 		for (int i = 0; i < dataPoints.size(); i++) {
 			Point dp = dataPoints.get(i);
-			if (dp.isHasCatch()) {
-				continue;
-			}
 			List<Point> arrivableObjects = getNeighborhood(dp, dataPoints,
 					radius, ObjectNum);
 			if (arrivableObjects != null) {
-				Cluster tempCluster = new Cluster();
-				tempCluster.setClusterName("Cluster " + i);
-				tempCluster.setDataPoints(arrivableObjects);
-				clusterList.add(tempCluster);
-			}
-		}
-
-		for (int i = 0; i < clusterList.size(); i++) {
-			for (int j = 0; j < clusterList.size(); j++) {
-				if (i != j) {
-					Cluster clusterA = clusterList.get(i);
+				boolean flag = false;
+				for (int j = 0; j < clusterList.size(); j++) {
 					Cluster clusterB = clusterList.get(j);
-
-					List<Point> dpsA = clusterA.getDataPoints();
 					List<Point> dpsB = clusterB.getDataPoints();
-
-					boolean flag = mergeList(dpsA, dpsB);
+					flag = mergeList(dpsB,arrivableObjects);
 					if (flag) {
-						clusterList.set(j, new Cluster());
+						break;
 					}
+				}
+				if (!flag) {
+					Cluster tempCluster = new Cluster();
+					tempCluster.setClusterName("Cluster " + (count++));
+					tempCluster.setDataPoints(arrivableObjects);
+					clusterList.add(tempCluster);
 				}
 			}
 		}
@@ -52,6 +43,12 @@ public class DJ_Cluster {
 		return clusterList;
 	}
 
+	/**
+	 * 合并两个簇
+	 * @param dps1 主簇
+	 * @param dps2 后面加的簇
+	 * @return
+	 */
 	private boolean mergeList(List<Point> dps1, List<Point> dps2) {
 		boolean flag = false;
 		if (dps1 == null || dps2 == null || dps1.size() == 0
@@ -130,7 +127,7 @@ public class DJ_Cluster {
 //			System.out.println(point.toString());
 //		}
 		DJ_Cluster ca = new DJ_Cluster();
-		List<Cluster> clusterList = ca.doDJClusterAnalysis(dpoints2, 15, 200);
+		List<Cluster> clusterList = ca.doDJClusterAnalysis(dpoints2, 15, 20);
 		ca.displayCluster(clusterList);
 //		RoadCenterLineAnalysis analysis = new RoadCenterLineAnalysis();
 //		List<Cluster> list = analysis.clusterPoint(dpoints2, 25, 2);
@@ -162,9 +159,9 @@ public class DJ_Cluster {
 					dpoints.add(point.getPoint());
 					count++;
 				}
-//				if (count>500000) {
-//					break;
-//				}
+				if (count>10000) {
+					break;
+				}
 			}
 			System.out.println("All point count is : " + count);
 		} catch (FileNotFoundException e) {

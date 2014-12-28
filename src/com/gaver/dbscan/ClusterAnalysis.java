@@ -17,6 +17,7 @@ public class ClusterAnalysis {
             double radius, int ObjectNum) {
          List<Cluster> clusterList=new ArrayList<Cluster>();
          for(int i=0; i<dataPoints.size();i++){
+        	 System.out.println(">>>>>>>>>>>>>"+i);
              DataPoint dp=dataPoints.get(i);
              List<DataPoint> arrivableObjects=isKeyAndReturnObjects(dp,dataPoints,radius,ObjectNum);
              if(arrivableObjects!=null){
@@ -186,14 +187,14 @@ public class ClusterAnalysis {
        dpoints.add(new DataPoint(p,"p",false));
        dpoints.add(new DataPoint(q,"q",false));
 
-//       ClusterAnalysis ca=new ClusterAnalysis();
-//       List<Cluster> clusterList=ca.doDbscanAnalysis(dpoints, 2, 4);
-//       ca.displayCluster(clusterList);
-       ArrayList<DataPoint> dpoints2 =
-       Test("C:\\Users\\Administrator\\Desktop\\LBS_DATASET\\LBS_DATASET\\traj_hefei.txt");
-     ClusterAnalysis ca=new ClusterAnalysis();
-     List<Cluster> clusterList=ca.doDbscanAnalysis(dpoints2, 0.001, 4);
-     ca.displayCluster(clusterList);
+       ClusterAnalysis ca=new ClusterAnalysis();
+       List<Cluster> clusterList=ca.doDbscanAnalysis(dpoints, 2, 4);
+       ca.displayCluster(clusterList);
+//       ArrayList<DataPoint> dpoints2 =
+//       Test("C:\\Users\\Administrator\\Desktop\\LBS_DATASET\\LBS_DATASET\\traj_hefei.txt");
+//     ClusterAnalysis ca=new ClusterAnalysis();
+//     List<Cluster> clusterList=ca.doDbscanAnalysis(dpoints2, 0.001, 4);
+//     ca.displayCluster(clusterList);
    }
    
    public static ArrayList<DataPoint> Test(String filepath){
